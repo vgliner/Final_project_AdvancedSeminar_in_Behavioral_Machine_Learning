@@ -32,9 +32,10 @@ class DataHandler:
     
 
 class matrix_factorization():
-    def __init__(self, data, features) -> None:
+    def __init__(self, data, features,iterations = 1000) -> None:
         self.data = data
         self.features = features
+        self.iterations = iterations
         self.user_count = data.shape[0]
         self.item_count = data.shape[1]
         self.user_features = np.random.uniform(low=0.1, high=0.9,size=(self.user_count,self.features))
@@ -115,16 +116,16 @@ class matrix_factorization():
             for j in range(0,self.item_count):
                 self.item_features[i,j]+=learning_rate*self.item_feature_gradient(item_col=j, wrt_item_idx=i)
 
-    def train_model(self,learning_rate=0.1, iterations = 1000):
+    def train_model(self,learning_rate=0.1):
         """
         Trains model, outputting MSE cost\ loss every 50 iterations
         """
-        for i in range(iterations):
+        for i in range(self.iterations):
             self.update_user_features(learning_rate=learning_rate)
             self.update_item_features(learning_rate=learning_rate)
             Err= self.MSE()
             # if i % 50 == 0:
-            print(Err)
+            print(f'Iteration #{i}, MSE={Err}')
             with open("Loss.txt", "a") as myfile:
                 myfile.write(f"{Err}\n")
 
